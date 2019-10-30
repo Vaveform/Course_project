@@ -4,6 +4,7 @@
 #include <map>
 #include <vector>
 #include <cmath>
+#include <exception>
 
 using namespace std;
 
@@ -47,6 +48,9 @@ public:
 		  for(const auto& event: pair.at(date)){
 			  cout << event << endl;
 		  }
+	  }
+	  else{
+		  throw runtime_error("Unknown signal 6");
 	  }
   };
 
