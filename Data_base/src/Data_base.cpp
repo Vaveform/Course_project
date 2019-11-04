@@ -14,6 +14,36 @@ class Date {
 	int month;
 	int day;
 public:
+	explicit Date(const string& input_date)
+	{
+		istringstream inp(input_date);
+		int new_year, new_month, new_day;
+		int symbol1 , symbol2;
+		inp >> new_year;
+		symbol1 = inp.get();
+		inp >> new_month;
+		symbol2 = inp.get();
+		inp >> new_day;
+		if(inp.peek() != -1 || symbol1 == -1 || symbol2 == -1){
+			throw runtime_error("Wrong format date");
+		}
+		else{
+			if(new_month > 12 || new_month < 1){
+				throw runtime_error("Month value is invalid: " + to_string(new_month));
+			}
+			else{
+				if(new_day > 31 || new_day < 1){
+					throw runtime_error("Day value is invalid: " + to_string(new_day));
+				}
+				else{
+					year = new_year;
+					month = new_month;
+					day = new_day;
+				}
+			}
+		}
+
+	};
   int GetYear() const
   {
 	  return year;
@@ -76,9 +106,6 @@ public:
 			  cout << event << endl;
 		  }
 	  }
-	  else{
-		  throw runtime_error("Unknown signal 6");
-	  }
   };
 
   void Print() const
@@ -88,7 +115,7 @@ public:
 		  for(const auto& event: item.second)
 		  {
 			  cout << setfill('0') << setw(4) << item.first.GetYear() << "-"
-					  << setw(2) << item.first.GetMonth()
+					  << setw(2) << item.first.GetMonth() << "-"
 					  << setw(2) << item.first.GetDay()
 					  << " " << event << endl;
 		  }
@@ -99,10 +126,62 @@ public:
 int main()
 {
   Database db;
-
+  set<string> all_commands = {"Del", "Find", "Print", "Add",""};
   string command;
   while (getline(cin, command))
   {
+	  stringstream inp(command);
+	  string activity, date;
+	  inp >> activity;
+	  if(all_commands.find(activity) != all_commands.end())
+	  {
+		  try
+		  {
+			  if(activity == "Del"){
+				  string date, event;
+				  inp >> date >> event;
+				  if(event.size() != 0){
+					  if(db.DeleteEvent(Date(date), event)){
+						  cout << "Deleted successfully" << endl;
+					  }
+					  else{
+						  cout << "Event not found" << endl;
+					  }
+				  }
+				  else{
+					  int deleted = db.DeleteDate(Date(date));
+					  cout << "Deleted " << deleted << " events" << endl;
+				  }
+			  }
+			  else if(activity == "Find")
+			  {
+				  string date;
+				  inp >> date;
+				  db.Find(Date(date));
+			  }
+			  else if(activity == "Print")
+			  {
+				  db.Print();
+			  }
+			  else if(activity == "Add")
+			  {
+				  string date, event;
+				  inp >> date >> event;
+				  db.AddEvent(Date(date), event);
+			  }
+			  else{
+				  continue;
+			  }
+		  }catch(exception& ex){
+			  cout << ex.what() << endl;
+			  break;
+		  }
+	  }
+	  else
+	  {
+		  cout << "Unknown command: " << activity << endl;
+		  break;
+	  }
   }
 
   return 0;
