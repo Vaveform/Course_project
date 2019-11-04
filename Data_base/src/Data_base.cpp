@@ -20,7 +20,11 @@ public:
 		istringstream inp(input_date);
 		int new_year, new_month, new_day;
 		char symbol1 , symbol2;
-		inp >> new_year >> symbol1 >> new_month >> symbol2 >> new_day;
+		inp >> new_year >> symbol1 >> new_month >> symbol2;
+		if(inp.peek() == -1){
+			throw runtime_error("Wrong date format: " + error);
+		}
+		inp >> new_day;
 		if(!inp.eof() || symbol1 != '-' || symbol2 != '-'){
 			throw runtime_error("Wrong date format: " + error);
 		}
