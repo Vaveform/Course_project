@@ -16,38 +16,28 @@ class Date {
 public:
 	explicit Date(const string& input_date)
 	{
-		istringstream inp(input_date);
 		string error = input_date;
-		int new_year, new_month, int_new_day;
-		int symbol1 , symbol2;
-		string new_day;
-		inp >> new_year;
-		symbol1 = inp.get();
-		inp >> new_month;
-		symbol2 = inp.get();
-		inp >> new_day;
-		try{
-			    int_new_day = stoi(new_day);
-				if(inp.peek() != -1 || symbol1 == -1 || symbol2 == -1 || to_string(int_new_day).size() != new_day.size()){
-					throw runtime_error("Wrong date format: " + error);
+		istringstream inp(input_date);
+		int new_year, new_month, new_day;
+		char symbol1 , symbol2;
+		inp >> new_year >> symbol1 >> new_month >> symbol2 >> new_day;
+		if(!inp.eof() || symbol1 != '-' || symbol2 != '-'){
+			throw runtime_error("Wrong date format: " + error);
+		}
+		else{
+			if(new_month > 12 || new_month < 1){
+				throw runtime_error("Month value is invalid: " + to_string(new_month));
+			}
+			else{
+				if(new_day > 31 || new_day < 1){
+					throw runtime_error("Day value is invalid: " + to_string(new_day));
 				}
 				else{
-					if(new_month > 12 || new_month < 1){
-						throw runtime_error("Month value is invalid: " + to_string(new_month));
-					}
-					else{
-						if(int_new_day > 31 || int_new_day < 1){
-							throw runtime_error("Day value is invalid: " + to_string(int_new_day));
-						}
-						else{
-							year = new_year;
-							month = new_month;
-							day = int_new_day;
-						}
-					}
+					year = new_year;
+					month = new_month;
+					day = new_day;
 				}
-		}catch(invalid_argument& ex){
-			throw runtime_error("Wrong date format: " + error);
+			}
 		}
 
 	};
@@ -178,7 +168,7 @@ int main()
 			  }
 		  }catch(exception& ex){
 			  cout << ex.what() << endl;
-			  //break;
+			  break;
 		  }
 	  }
 	  else
@@ -188,5 +178,5 @@ int main()
 	  }
   }
 
-  //return 0;
+  return 0;
 }
