@@ -21,7 +21,7 @@ public:
 		int new_year, new_month, new_day;
 		char symbol1 , symbol2;
 		inp >> new_year >> symbol1 >> new_month >> symbol2 >> new_day;
-		if(inp.peek() != -1 || symbol1 != '-' || symbol2 == '-'){
+		if(inp.peek() != -1 || symbol1 != '-' || symbol2 != '-'){
 			throw runtime_error("Wrong format date" + error);
 		}
 		else{
