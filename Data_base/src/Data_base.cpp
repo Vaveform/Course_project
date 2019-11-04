@@ -17,30 +17,37 @@ public:
 	explicit Date(const string& input_date)
 	{
 		istringstream inp(input_date);
-		int new_year, new_month, new_day;
+		string error = input_date;
+		int new_year, new_month, int_new_day;
 		int symbol1 , symbol2;
+		string new_day;
 		inp >> new_year;
 		symbol1 = inp.get();
 		inp >> new_month;
 		symbol2 = inp.get();
 		inp >> new_day;
-		if(inp.peek() != -1 || symbol1 == -1 || symbol2 == -1){
-			throw runtime_error("Wrong format date");
-		}
-		else{
-			if(new_month > 12 || new_month < 1){
-				throw runtime_error("Month value is invalid: " + to_string(new_month));
-			}
-			else{
-				if(new_day > 31 || new_day < 1){
-					throw runtime_error("Day value is invalid: " + to_string(new_day));
+		try{
+			    int_new_day = stoi(new_day);
+				if(inp.peek() != -1 || symbol1 == -1 || symbol2 == -1 || to_string(int_new_day).size() != new_day.size()){
+					throw runtime_error("Wrong date format: " + error);
 				}
 				else{
-					year = new_year;
-					month = new_month;
-					day = new_day;
+					if(new_month > 12 || new_month < 1){
+						throw runtime_error("Month value is invalid: " + to_string(new_month));
+					}
+					else{
+						if(int_new_day > 31 || int_new_day < 1){
+							throw runtime_error("Day value is invalid: " + to_string(int_new_day));
+						}
+						else{
+							year = new_year;
+							month = new_month;
+							day = int_new_day;
+						}
+					}
 				}
-			}
+		}catch(invalid_argument& ex){
+			throw runtime_error("Wrong date format: " + error);
 		}
 
 	};
@@ -60,8 +67,8 @@ public:
 
 bool operator<(const Date& lhs, const Date& rhs)
 {
-	int summary_day_lhs = 12 * 31 * abs(lhs.GetYear()) + 31 * lhs.GetMonth() + lhs.GetDay();
-	int summary_day_rhs = 12 * 31 * abs(rhs.GetYear()) + 31 * rhs.GetMonth() + rhs.GetDay();
+	int summary_day_lhs = 12 * 31 * lhs.GetYear() + 31 * lhs.GetMonth() + lhs.GetDay();
+	int summary_day_rhs = 12 * 31 * rhs.GetYear() + 31 * rhs.GetMonth() + rhs.GetDay();
 	return summary_day_lhs < summary_day_rhs;
 };
 
@@ -92,9 +99,6 @@ public:
 	  {
 		  result = pair.at(date).size();
 		  pair.erase(finder);
-	  }
-	  else{
-		  throw runtime_error("Unknown signal 6");
 	  }
 	  return result;
   };
@@ -174,7 +178,7 @@ int main()
 			  }
 		  }catch(exception& ex){
 			  cout << ex.what() << endl;
-			  break;
+			  //break;
 		  }
 	  }
 	  else
@@ -184,5 +188,5 @@ int main()
 	  }
   }
 
-  return 0;
+  //return 0;
 }
