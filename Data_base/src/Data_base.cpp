@@ -16,16 +16,13 @@ class Date {
 public:
 	explicit Date(const string& input_date)
 	{
+		string error = input_date;
 		istringstream inp(input_date);
 		int new_year, new_month, new_day;
-		int symbol1 , symbol2;
-		inp >> new_year;
-		symbol1 = inp.get();
-		inp >> new_month;
-		symbol2 = inp.get();
-		inp >> new_day;
-		if(inp.peek() != -1 || symbol1 == -1 || symbol2 == -1){
-			throw runtime_error("Wrong format date");
+		char symbol1 , symbol2;
+		inp >> new_year >> symbol1 >> new_month >> symbol2 >> new_day;
+		if(inp.peek() != -1 || symbol1 != '-' || symbol2 == '-'){
+			throw runtime_error("Wrong format date" + error);
 		}
 		else{
 			if(new_month > 12 || new_month < 1){
@@ -60,8 +57,8 @@ public:
 
 bool operator<(const Date& lhs, const Date& rhs)
 {
-	int summary_day_lhs = 12 * 31 * abs(lhs.GetYear()) + 31 * lhs.GetMonth() + lhs.GetDay();
-	int summary_day_rhs = 12 * 31 * abs(rhs.GetYear()) + 31 * rhs.GetMonth() + rhs.GetDay();
+	int summary_day_lhs = 12 * 31 * lhs.GetYear() + 31 * lhs.GetMonth() + lhs.GetDay();
+	int summary_day_rhs = 12 * 31 * rhs.GetYear() + 31 * rhs.GetMonth() + rhs.GetDay();
 	return summary_day_lhs < summary_day_rhs;
 };
 
@@ -92,9 +89,6 @@ public:
 	  {
 		  result = pair.at(date).size();
 		  pair.erase(finder);
-	  }
-	  else{
-		  throw runtime_error("Unknown signal 6");
 	  }
 	  return result;
   };
